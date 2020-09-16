@@ -86,6 +86,7 @@ class Meta(nn.Module):
             grad = torch.autograd.grad(loss, self.net.parameters())
             fast_weights = list(map(lambda p: p[1] - self.update_lr * p[0], zip(grad, self.net.parameters())))
 
+
             # this is the loss and accuracy before first update
             with torch.no_grad():
                 # [setsz, nway]
@@ -95,6 +96,8 @@ class Meta(nn.Module):
 
                 pred_q = F.softmax(logits_q, dim=1).argmax(dim=1)
                 correct = torch.eq(pred_q, y_qry[i]).sum().item()
+                print(pred_q)
+                print(y_qry[i])
                 corrects[0] = corrects[0] + correct
 
             # this is the loss and accuracy after the first update
