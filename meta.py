@@ -101,15 +101,14 @@ class Meta(nn.Module):
                 corrects[0] = corrects[0] + correct
 
             # this is the loss and accuracy after the first update
-            with torch.no_grad():
-                # [setsz, nway]
-                logits_q = self.net(x_qry[i], fast_weights, bn_training=True)
-                loss_q = F.cross_entropy(logits_q, y_qry[i])
-                losses_q[1] += loss_q
-                # [setsz]
-                pred_q = F.softmax(logits_q, dim=1).argmax(dim=1)
-                correct = torch.eq(pred_q, y_qry[i]).sum().item()
-                corrects[1] = corrects[1] + correct
+            # [setsz, nway]
+            logits_q = self.net(x_qry[i], fast_weights, bn_training=True)
+            loss_q = F.cross_entropy(logits_q, y_qry[i])
+            losses_q[1] += loss_q
+            # [setsz]
+            pred_q = F.softmax(logits_q, dim=1).argmax(dim=1)
+            correct = torch.eq(pred_q, y_qry[i]).sum().item()
+            corrects[1] = corrects[1] + correct
 
             for k in range(1, self.update_step):
                 # 1. run the i-th task and compute loss for k=1~K-1
